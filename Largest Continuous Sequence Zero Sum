@@ -9,24 +9,23 @@ Space complexity: O(1) as no extra space is used.
 
 Approach 2: (Hashing with Prefix Sum)
 
+Time Complexity: O(n)
+Space Complexity: O(n)
+
 public class Solution {
     public ArrayList<Integer> lszero(ArrayList<Integer> A) {
-	    Map<Integer,Integer> map=new HashMap<Integer,Integer>();
+    	Map<Integer,Integer> map=new HashMap<Integer,Integer>();
         ArrayList<Integer> result=new ArrayList<Integer>();
         int k=0,l=0,prefixSum=0;
         
         map.put(0,-1);
         for(int i=0;i<A.size();i++){
-            
             prefixSum+=A.get(i);
-        
             if(map.containsKey(prefixSum)){
-               
                if(i-map.get(prefixSum)>l-k) {
             	   k=map.get(prefixSum);
 	                l=i;
                }
-                
             }else{
                 map.put(prefixSum,i);
             }    
@@ -35,7 +34,6 @@ public class Solution {
         for(int i=k+1;i<=l;i++){
             result.add(A.get(i));
         }
-        
         return result; 
     }
 }
