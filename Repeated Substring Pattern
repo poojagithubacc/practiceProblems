@@ -1,0 +1,98 @@
+Approach 1
+
+
+public boolean repeatedSubstringPattern(String s) {
+    if (s == null || s.length() <= 1) {
+        return false;
+    }
+    int len = s.length();
+    for (int i=1; i<=len/2; i++) {
+        if (len%i != 0) {
+            continue;
+        }
+        String str = s.substring(0, i);
+        StringBuilder sb = new StringBuilder();
+        for (int j=0; j<len/i; j++) {
+            sb.append(str);
+        }
+        if (s.equals(sb.toString())) {
+            return true;
+        }
+    }
+    return false;
+}
+
+Approach 2
+
+public boolean repeatedSubstringPattern2(String s) {
+    if (s == null || s.length() <= 1) {
+        return false;
+    }
+    int len = s.length();
+    for (int i=1; i<=len/2; i++) {
+        if (len%i != 0) {
+            continue;
+        }
+        String str = s.substring(0, i);
+        boolean flag = true;
+        for (int j=i; j<len; j += i) {
+            if (!str.equals(s.substring(j, j+i))) {
+                flag = false;
+                break;
+            }
+        }
+        if (flag) {
+            return true;
+        }
+    }
+    return false;
+}
+
+
+Approach 3
+
+public boolean repeatedSubstringPattern3(String s) {
+    int len = s.length();
+    if (len < 2) {
+        return false;
+    }
+    char lastChar = s.charAt(len-1);
+    int index = s.indexOf(lastChar);
+    // The idea is: Find the location of the last character, and if it's pattern, there must be
+    // len%(index+1)==0. Then pattern should be a substring from 0 to index.
+    while (index >=0 && index < len-1) {
+        if (len % (index+1) == 0) {
+            String pattern = s.substring(0, index+1);
+            if (foundPattern(s, pattern)) {
+                return true;
+            } else {
+                //Otherwise, find the next place where lastChar appears.
+                index = s.indexOf(lastChar, index+1);
+            }
+        } else {
+            //Otherwise, find the next place where lastChar appears.
+            index = s.indexOf(lastChar, index+1);
+        }
+    }
+    return false;  
+}
+
+private boolean foundPattern(String s, String pattern) {
+    int fromIndex = pattern.length();
+    int n = fromIndex;
+    while (fromIndex < s.length()) {
+        if (!pattern.equals(s.substring(fromIndex, fromIndex + n))) {
+            return false;
+        }
+        fromIndex += fromIndex;
+    }
+    return true;
+}
+
+
+Approach 4
+
+public boolean repeatedSubstringPattern4(String s) {
+    String str = s + s;
+    return str.substring(1, str.length() - 1).contains(s);
+}
