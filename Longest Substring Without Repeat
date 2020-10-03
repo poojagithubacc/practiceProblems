@@ -1,0 +1,149 @@
+The longest substring without repeating letters for "abcabcbb" is "abc", which the length is 3.
+
+Approach 1: (Two pointer solution) All you need to do is use two pointers to keep a window with no repetitions of characters.
+Keep moving the right pointer and if you encounter any repeating character start moving left pointer untill no character is repeated.
+
+Also, note that the size of character set is small ( 128 at max ), 
+so tracking the count of characters in the current set is fairly easy using hashing / array buckets.
+
+public int lengthOfLongestSubstring(String A) {
+    HashSet<Character> set = new HashSet<Character>();
+    int start = 0,end = 0;
+    int maxLen = Integer.MIN_VALUE;
+    while(end < A.length()){
+        if(!set.contains(A.charAt(end))){
+           set.add(A.charAt(end));
+           end++;
+           maxLen = Math.max(maxLen,set.size());
+        }else{
+            set.remove(A.charAt(start));
+            start++;
+        }
+    }
+    return maxLen;
+}
+
+
+
+Approach 2: (Brute force) Enumerate all substrings of string, then filter the string which are not having any duplicate characters and keep in set
+
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        int ans = 0;
+        for (int i = 0; i < n; i++)
+            for (int j = i + 1; j <= n; j++)
+                if (allUnique(s, i, j)) ans = Math.max(ans, j - i);
+        return ans;
+    }
+
+    public boolean allUnique(String s, int start, int end) {
+        Set<Character> set = new HashSet<>();
+        for (int i = start; i < end; i++) {
+            Character ch = s.charAt(i);
+            if (set.contains(ch)) return false;
+            set.add(ch);
+        }
+        return true;
+    }
+}
+
+Time complexity : O(n^3)
+Space complexity : O(k) k is the size of HashSet.
+
+
+
+Approach 3: (Sliding Window) We use HashSet to store the characters in current window [i, j)[i,j) (j = ij=i initially). 
+Then we slide the index jj to the right. If it is not in the HashSet, we slide jj further. Doing so until s[j] is already in the HashSet. 
+At this point, we found the maximum size of substrings without duplicate characters start with index ii. If we do this for all ii, we get our answer.
+
+
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length();
+        Set<Character> set = new HashSet<>();
+        int ans = 0, i = 0, j = 0;
+        while (i < n && j < n) {
+            // try to extend the range [i, j]
+            if (!set.contains(s.charAt(j))){
+                set.add(s.charAt(j++));
+                ans = Math.max(ans, j - i);
+            }
+            else {
+                set.remove(s.charAt(i++));
+            }
+        }
+        return ans;
+    }
+}
+
+Time complexity : O(n)
+Space complexity : O(k) k is the size of hashset.
+
+
+Approach 4: (Sliding Window Optimized)  Instead of using a set to tell if a character exists or not, we could define a mapping of the characters to its index. 
+Then we can skip the characters immediately when we found a repeated character.
+
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length(), ans = 0;
+        Map<Character, Integer> map = new HashMap<>(); // current index of character
+        // try to extend the range [i, j]
+        for (int j = 0, i = 0; j < n; j++) {
+            if (map.containsKey(s.charAt(j))) {
+                i = Math.max(map.get(s.charAt(j)), i);
+            }
+            ans = Math.max(ans, j - i + 1);
+            map.put(s.charAt(j), j + 1);
+        }
+        return ans;
+    }
+}
+
+
+
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length(), ans = 0;
+        Map<Character, Integer> map = new HashMap<>(); // current index of character
+        // try to extend the range [i, j]
+        for (int j = 0, i = 0; j < n; j++) {
+            if (map.containsKey(s.charAt(j))) {
+                i = Math.max(map.get(s.charAt(j)), i);
+            }
+            ans = Math.max(ans, j - i + 1);
+            map.put(s.charAt(j), j + 1);
+        }
+        return ans;
+    }
+}
+
+If we know that the charset is rather small, we can replace the Map with an integer array as direct access table.
+
+Commonly used tables are:
+
+int[26] for Letters 'a' - 'z' or 'A' - 'Z'
+int[128] for ASCII
+int[256] for Extended ASCII
+
+
+public class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        int n = s.length(), ans = 0;
+        int[] index = new int[128]; // current index of character
+        // try to extend the range [i, j]
+        for (int j = 0, i = 0; j < n; j++) {
+            i = Math.max(index[s.charAt(j)], i);
+            ans = Math.max(ans, j - i + 1);
+            index[s.charAt(j)] = j + 1;
+        }
+        return ans;
+    }
+}
+
+
+Time complexity : O(n)O(n). Index jj will iterate nn times.
+
+Space complexity (HashMap) : O(min(m, n))O(min(m,n)). Same as the previous approach.
+
+Space complexity (Table): O(m)O(m). mm is the size of the charset.
