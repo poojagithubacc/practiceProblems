@@ -7,7 +7,8 @@ Approach 1: (Brute Force) The brute force solution is calculating the sum of eac
 Time Complexity: O(n^2) due to the use of nested loops.
 Space complexity: O(1) as no extra space is used.
 
-Approach 2: (Hashing with Prefix Sum)
+Approach 2: (Hashing with Prefix Sum)If sub-array having sum is 0 means we should get two elements having the same prefix sum.
+For example in the above prefix sum at index 0 sum is 1 and at index 4 sum is 1, which indicates sub-array starting from index 1 to 4 having sum is 0.
 
 Time Complexity: O(n)
 Space Complexity: O(n)
