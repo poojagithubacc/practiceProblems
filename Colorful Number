@@ -1,1 +1,31 @@
 
+import java.util.HashSet;
+
+public class ColorFulNum {
+
+	public static void main(String[] args) {
+		
+		System.out.println(new ColorFulNum().colorful(3245));
+	}
+	
+	
+	 public int colorful(int a) {
+		 
+	        String A = Integer.toString(a); 
+	        HashSet<Integer> set = new HashSet<Integer>();
+	        int prod = 0;
+	        
+	        //Exploring all combinations
+	        for(int i = 0; i < A.length(); i++) {
+	            prod = 1;
+	            for(int j = i; j < A.length(); j++ ){
+	                prod *= A.charAt(j)-'0';   
+	                //Check if Product value already present.
+	                if(set.contains(prod))
+	                    return 0;
+	                else set.add(prod);    
+	            }
+	        }
+	        return 1; 
+	    }
+}
