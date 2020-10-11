@@ -1,0 +1,1 @@
+1 + LCS(substr(A,A.len-1), substr(B,B.len-1)) 
